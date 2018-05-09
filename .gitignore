@@ -1,0 +1,5 @@
+*.html
+/vendor/
+/test.php
+/first.php
+/database.sqlite

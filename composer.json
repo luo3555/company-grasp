@@ -1,0 +1,23 @@
+{
+    "name": "daniel.luo/public_html",
+    "description": "Grasp info",
+    "type": "project",
+    "require": {
+        "rmccue/requests": "^1.7",
+        "jaeger/querylist": "^4.0",
+        "drewm/mailchimp-api": "^2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lib\\":"lib",
+            "Lib\\Select\\":"lib\\select"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Luo",
+            "email": "luo3555@qq.com"
+        }
+    ]
+}
