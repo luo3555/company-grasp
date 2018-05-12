@@ -14,8 +14,8 @@ $page = Lib\Sqlite::getConfig('customs/directory/page');
 $pageSize = Lib\Sqlite::getConfig('customs/directory/page_size');
 
 $customs->setUrl($url);
-while (true)
-{
+// while (true)
+// {
     $customs->getBaseInfo($page, $pageSize);
 
     if (empty($customs->getData('list'))) {
@@ -33,7 +33,7 @@ while (true)
 
     $page++;
     Lib\Sqlite::updateConfig('customs/directory/page', $page);
-}
+//}
 
 
 
@@ -41,31 +41,31 @@ while (true)
 2. 失信企业 ************************************************************************************************************************
 ************************************************************************************************************************************
 ***********************************************************************************************************************************/
-$url = Lib\Sqlite::getConfig('customs/lost/url');
-$page = Lib\Sqlite::getConfig('customs/lost/page');
-$pageSize = Lib\Sqlite::getConfig('customs/lost/page_size');
+// $url = Lib\Sqlite::getConfig('customs/lost/url');
+// $page = Lib\Sqlite::getConfig('customs/lost/page');
+// $pageSize = Lib\Sqlite::getConfig('customs/lost/page_size');
 
-$customs->setUrl($url);
-while (true)
-{
-    $customs->getBaseInfo($page, $pageSize);
+// $customs->setUrl($url);
+// while (true)
+// {
+//     $customs->getBaseInfo($page, $pageSize);
 
-    if (empty($customs->getData('list'))) {
-        break;
-    }
+//     if (empty($customs->getData('list'))) {
+//         break;
+//     }
 
-    if ($page>$customs->getData('totalPage')) {
-        break;
-    }
+//     if ($page>$customs->getData('totalPage')) {
+//         break;
+//     }
 
-    foreach ($customs->getData('list') as $item) {
-        $item['lost_credit'] = 1;
-        Lib\Sqlite::addListRecord($item);
-    }
+//     foreach ($customs->getData('list') as $item) {
+//         $item['lost_credit'] = 1;
+//         Lib\Sqlite::addListRecord($item);
+//     }
 
-    $page++;
-    Lib\Sqlite::updateConfig('customs/lost/page', $page);
-}
+//     $page++;
+//     Lib\Sqlite::updateConfig('customs/lost/page', $page);
+// }
 
 
 

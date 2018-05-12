@@ -20,8 +20,10 @@ final class Tenf
 
     protected static function _getClassByUri($uri, $namespace, $args=null)
     {
-        $uri = ucfirst($uri);
-        $uri = str_replace('_', '\\', $uri);
+        $space = ' ';
+        $uri = str_replace('_', $space, $uri);
+        $uri = ucwords($uri);
+        $uri = str_replace($space, '\\', $uri);
         $className = sprintf('%s\%s', $namespace, $uri);
         if (class_exists($className)) {
             return new $className($args);

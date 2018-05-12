@@ -1,9 +1,7 @@
 <?php
 namespace Lib\Model;
 
-use Lib\Sqlite;
-
-class Company extends Sqlite
+class Company extends Modelbase
 {
     const PENDING_SEARCH = 'p';
 

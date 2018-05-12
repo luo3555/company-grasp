@@ -18,15 +18,15 @@ fi
 
 BASEPATH=$(cd $(dirname $0); pwd)
 PHP_BIN=$(which php)
-RUN_SCRIPT='command.php'
-RUN_COMMAND=$BASEPATH'/'$RUN_SCRIPT
+RUN_SCRIPT='proxy.php '
+RUN_COMMAND=$BASEPATH'/'$RUN_SCRIPT$1
 
 # Current process
-CURRENT_PROCESS=$(ps -ef | grep $RUN_COMMAND | wc -l)
+CURRENT_PROCESS=$(ps -ef | grep $BASEPATH'/'$RUN_SCRIPT | wc -l)
 
 if [ $CURRENT_PROCESS -lt $MAX_PROCESS ]; 
 then
-  $PHP_BIN $RUN_COMMAND
+  $PHP_BIN $RUN_COMMAND & > /dev/null
 else
   echo 'Current Process:'$CURRENT_PROCESS
   echo 'Allow Max Process:'$MAX_PROCESS
