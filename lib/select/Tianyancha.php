@@ -16,11 +16,8 @@ class Tianyancha extends Base
 
     public function graspData($company)
     {
-        // $options = [
-        //     'proxy' => '27.209.6.255:61234',
-        // ];
-        // $response = \Requests::get(sprintf('%s/search?key=%s', $this->_config['url'], $company),[], $options);
         $html = $this->request(sprintf('%s/search?key=%s', $this->_config['url'], $company));
+        echo $html;
         $rules = [
             'href' => [
                 '.search_result_container .search_result_single .search_right_item>div>a.sv-search-company', 'href'
@@ -29,7 +26,6 @@ class Tianyancha extends Base
         $list = QueryList::html($html)->rules($rules)->query()->getData()->all();
         $result = [];
         foreach ($list as $href) {
-            //$html = \Requests::get($href['href'], [], $options)->body;
             $html = $this->request($href['href']);
             $rules = [
                 'company' => [
@@ -71,6 +67,7 @@ class Tianyancha extends Base
                 $result = array_merge($result, $data);
             }
         }
+        echo empty($result) ? 'empty' . PHP_EOL : 'hasData' . PHP_EOL ;
         return $result;
     }
 

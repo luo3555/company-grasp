@@ -1,7 +1,5 @@
 <?php
-namespace Lib\Select;
-
-use Lib\Filterlist;
+namespace Lib\Resource;
 
 abstract class Base
 {
@@ -11,12 +9,14 @@ abstract class Base
 
     protected $_options = [];
 
+    protected $_graspObject;
+
+    protected $_response = [];
+
     public function __construct()
     {
         $this->_config = $this->initConfig();
     }
-
-    abstract public function graspData($company);
 
     /**
      * [
@@ -26,38 +26,55 @@ abstract class Base
      */
     abstract protected function initConfig();
 
-    public function run()
+    public function setGraspObject($graspObject)
     {
-        // 根据 limit 从 list 表获取限定数量的需要抓取的数据
-        $list = \Lib\Sqlite::getListRecored($this->_config['limit']);
+        $this->_graspObject = $graspObject;
+        return $this;
+    }
 
-        foreach ($list as $item) {
-            //echo $item['nameSaic'] . PHP_EOL;
-            $relateInfo = $this->graspData($item['nameSaic']);
-            $hasResult = false;
-            if (is_array($relateInfo)) {
-                foreach ($relateInfo as $company) {
-                    $company['saicSysNo'] = $item['saicSysNo'];
-                    if (!empty($company['web'])) {
-                        $webDomain = substr($company['web'], (stripos($company['web'], '.') + 1));
-                        $domain = new \Lib\Domain();
-                        $domainInfo = $domain->getInfo($webDomain);
-                        $company = array_merge($company, $domainInfo);
-                    }
-                    $company = $this->getQq($company);
-                    $id = (int)\Lib\Sqlite::addDetailRecord($company);
-                    $hasResult = $id > 0 ? true : false ;
+    public function getGraspObject()
+    {
+        return $this->_graspObject;
+    }
+
+    abstract protected function graspDateByKeyword($graspObject);
+
+    public function execute()
+    {
+        $result = [];
+        $relateInfo = $this->graspDateByKeyword($this->getGraspObject()->nameSaic);
+        if (is_array($relateInfo)) {
+            foreach ($relateInfo as $company) {
+                // @TODO 如果，有点电话，网站都没有，就跳过这条记录
+                $company['saicSysNo'] = $graspObject->saicSysNo;
+                if (!empty($company['web'])) {
+                    $webDomain = substr($company['web'], (stripos($company['web'], '.') + 1));
+                    $domain = new \Lib\Domain();
+                    $domainInfo = $domain->getInfo($webDomain);
+                    $company = array_merge($company, $domainInfo);
                 }
-            }
-            if (empty($relateInfo)) {
-                $configPrefix = strtolower(substr(get_class($this), (strripos(get_class($this), '\\')+1)));
-                \Lib\Sqlite::updateConfig($configPrefix . '/run/allow', 0);
-                //break;
-            }
-            if ($hasResult) {
-                \Lib\Sqlite::updateListRecordStatus($item['id'], 'c');
+                $company = $this->getQq($company);
+                $this->executeProcessDo($company);
+                $result[] = $company;
             }
         }
+        $this->_response = $result;
+        return $result;
+    }
+
+    protected function executeProcessDo($company)
+    {
+        // 做你想做的
+    }
+
+    public function getResponse()
+    {
+        return $this->_response;
+    }
+
+    public function getCount()
+    {
+        return count($this->_response);
     }
 
     protected function getQq($data)
@@ -71,11 +88,6 @@ abstract class Base
             }
         }
         return $data;
-    }
-
-    public function getConfig($path)
-    {
-        return \Lib\Sqlite::getConfig($path);
     }
 
     protected function _filter(&$array, $field, $defaultValue=null, $callback=null)
@@ -107,5 +119,10 @@ abstract class Base
     public function setHeader($key, $value)
     {
         $this->_headers[$key] = $value;
+    }
+
+    public function getConfig($path)
+    {
+        return \Lib\Sqlite::getConfig($path);
     }
 }

@@ -1,12 +1,6 @@
 <?php
-namespace Lib\Select;
+namespace Lib\Resource;
 
-use QL\QueryList;
-use Lib\Select\Base;
-
-/**
- * 获取公司法人信息
- */
 class Qichacha extends Base
 {
     protected function initConfig()
@@ -18,8 +12,7 @@ class Qichacha extends Base
         ];
     }
 
-
-    public function graspData($companyName)
+    protected function graspDateByKeyword($companyName)
     {
         // get valicate cookie
         $response = \Requests::get('http://www.qichacha.com/index_verify?type=companysearch');
@@ -65,12 +58,6 @@ class Qichacha extends Base
                         $this->format($item, 'company_email', '邮箱：');
                         $this->format($item, 'company_phone', '电话：');
                         $this->format($item, 'company_address', '地址：');
-                        
-                        // $item['company'] = strip_tags($item['company']);
-                        // $item['registery_price'] = str_replace('注册资本：', '', $item['registery_price']);
-                        // $item['company_email'] = str_replace('邮箱：', '', $item['company_email']);
-                        // $item['company_phone'] = str_replace('电话：', '', $item['company_phone']);
-                        // $item['company_address'] = str_replace('地址：', '', strip_tags($item['company_address']));
                         return $item;
                     })->first();
             }
@@ -83,14 +70,6 @@ class Qichacha extends Base
              * 详情页面获取经营范围和网站
              * 
              */
-            // $response = \Requests::get(
-            //     $url,
-            //     [],
-            //     [
-            //         'cookies' => $cookies
-            //     ]
-            // );
-            // $detailHtml = $response->body;
             $detailHtml = $this->request($url, [], [
                                 'cookies' => $cookies
                             ]);
@@ -113,7 +92,6 @@ class Qichacha extends Base
                 $resule[] = $item;
             }
         }
-        echo empty($result) ? 'empty' . PHP_EOL : 'hasData' . PHP_EOL ;
         return $result;
     }
 

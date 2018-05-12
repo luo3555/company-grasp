@@ -57,6 +57,26 @@ class Sqlite extends Objectdata
         return self::insert($table, $data);
     }
 
+    public static function addProxyRecord($data)
+    {
+        $table = 'proxy_list';
+        $data['date'] = date('Y-m-d H:i:s', time());
+        return self::insert($table, $data);
+    }
+
+    public static function deleteProxyRecord($ip, $port)
+    {
+        self::sqLite()->query(sprintf("delete from proxy_list where ip='%s' AND port=%d", $ip, $port));
+    }
+
+    public static function getProxyList()
+    {
+        $sql = "select ip, port from proxy_list where enable=1 order by date desc limit 50";
+        $sth = self::sqLite()->prepare($sql);
+        $sth->execute();
+        return $sth->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     protected static function insert($table, $data)
     {
         $fields = self::getCache('fields', $table);
