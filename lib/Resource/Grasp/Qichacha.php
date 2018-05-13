@@ -15,7 +15,7 @@ class Qichacha extends \Lib\Resource\Graspbase
     protected function graspDataByKeyword($companyName)
     {
         // get valicate cookie
-        $response = $this->request('http://www.qichacha.com/index_verify?type=companysearch');
+        $response = \Requests::get('http://www.qichacha.com/index_verify?type=companysearch');
         $acwTc = $response->cookies->offsetGet('acw_tc');
         $phpSessid = $response->cookies->offsetGet('PHPSESSID');
 
@@ -55,8 +55,8 @@ class Qichacha extends \Lib\Resource\Graspbase
                     $item = $this->setContent($value)->rules($rules)->query()->getData(function($item){
                         $this->format($item, 'company');
                         $this->format($item, 'registery_price', '注册资本：');
-                        $this->format($item, 'company_email', '邮箱：');
-                        $this->format($item, 'company_phone', '电话：');
+                        $this->format($item, 'company_email', ['邮箱：', '-']);
+                        $this->format($item, 'company_phone', ['电话：', '']);
                         $this->format($item, 'company_address', '地址：');
                         return $item;
                     })->first();
@@ -100,7 +100,12 @@ class Qichacha extends \Lib\Resource\Graspbase
         if (isset($array[$field])) {
             $array[$field] = strip_tags($array[$field]);
             if (!is_null($search)) {
-                $array[$field] = str_replace($search, $replace, $array[$field]);
+                if (!is_array($search)) {
+                    $search = (array)$search;
+                }
+                foreach ($search as $need) {
+                    $array[$field] = str_replace($need, $replace, $array[$field]);
+                }
             }
         }
     }

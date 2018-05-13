@@ -45,7 +45,7 @@ abstract class Graspbase extends Base
         if (is_array($relateInfo)) {
             foreach ($relateInfo as $company) {
                 // @TODO 如果，有点电话，网站都没有，就跳过这条记录
-                $company['saicSysNo'] = $graspObject->saicSysNo;
+                $company['saicSysNo'] = $this->getGraspObject()->saicSysNo;
                 if (!empty($company['web'])) {
                     $webDomain = substr($company['web'], (stripos($company['web'], '.') + 1));
                     $domain = new \Lib\Domain();

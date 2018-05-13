@@ -14,6 +14,9 @@ use Lib\Tenf;
 
 define('ROOT_DIR', dirname(__FILE__));
 
+$start = time();
+$today = date('Y-m-d', $start);
+
 // step 1
 // 获取最新的代理IP
 /** @var \Lib\Model\Proxy $proxyMod **/
@@ -21,54 +24,65 @@ $proxyMod = Tenf::getModel('proxy');
 // 清除无效代理
 $proxyMod::clean();
 // 获取最新的代理
-$proxy = $proxyMod::firstRecord();
+$proxies = $proxyMod::mulitRecord();
 
-if (!$proxy) {
+if (!$proxies) {
     echo 'No enable proxy!' . PHP_EOL;
     exit;
 }
+
+//print_r($proxies);
 
 // step 2
 // 标记要抓取的公司
 /** @var \Lib\Model\Company $companyMod **/
 $companyMod = Tenf::getModel('company');
-$company = $companyMod::getFlagComapny();
 
-// step 3
-// 开始抓取数据
-$brow = [
-    'Mozilla/5.0 (X11; Ubuntu; Linu…) Gecko/20100101 Firefox/59.0',
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:59.0) Gecko/20100101 Firefox/59.0'
-];
-$agent = $agent = rand(0, (count($brow) -1));
+foreach ($proxies as $proxy) {
+    $companies = $companyMod::getMultiFlagCompany();
 
-try {
-    /** @var \Lib\Resource\Base $resourceMod **/
-    $resourceMod = Tenf::getResource('grasp_qichacha');
-    $resourceMod->setHeader('User-Agent', $brow[$agent]);
-    $resourceMod->setOption('timeout', 30);
-    $resourceMod->setOption('proxy', sprintf('%s:%d', $proxy->ip, $proxy->port));
-    $resourceMod->setGraspObject($company);
+    // step 3
+    // 开始抓取数据
+    $brow = [
+        'Mozilla/5.0 (X11; Ubuntu; Linu…) Gecko/20100101 Firefox/59.0',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:59.0) Gecko/20100101 Firefox/59.0'
+    ];
+    $agent = $agent = rand(0, (count($brow) -1));
 
-    echo get_class($resourceMod) . ' loading.....' . PHP_EOL;
-    $resourceMod->execute();
-    if ($resourceMod->getCount()) {
-        // 保存公司信息
-        foreach ($resourceMod->getResponse() as $item) {
-            $companyMod::addDetailRecord($item);
+    echo 'Start Time:' . date('Y-m-d H:i:s', $start) . PHP_EOL;
+    foreach ($companies as $company) {
+        try {
+            /** @var \Lib\Resource\Base $resourceMod **/
+            $resourceMod = Tenf::getResource('grasp_qichacha');
+            $resourceMod->setHeader('User-Agent', $brow[$agent]);
+            $resourceMod->setOption('timeout', 30);
+            $resourceMod->setOption('proxy', sprintf('%s:%d', $proxy->ip, $proxy->port));
+            //print_r($company);
+            $resourceMod->setGraspObject($company);
+
+            echo get_class($resourceMod) . ' loading.....' . PHP_EOL;
+            $resourceMod->execute();
+            if ($resourceMod->getCount()) {
+                // 保存公司信息
+                foreach ($resourceMod->getResponse() as $item) {
+                    $companyMod::addDetailRecord($item);
+                }
+                $companyMod::updateStatusById($company->id, 'c');
+                echo 'Get Data Complete!' . PHP_EOL;
+            } else {
+                $companyMod::updateStatusById($company->id, 'p');
+                echo 'Can not grasp data...' . PHP_EOL;
+            }
+        } catch (\Exception $e) {
+            $companyMod::updateStatusById($company->id, 'p');
+            $proxyMod::addFailNum($proxy->id);
+            echo $e->getMessage() . PHP_EOL;
         }
-        $companyMod::updateStatusById($company->id, 'c');
-        echo 'Get Data Complete!' . PHP_EOL;
-    } else {
-        $companyMod::updateStatusById($company->id, 'p');
-        echo 'Empay' . PHP_EOL;
     }
-} catch (\Exception $e) {
-    $companyMod::updateStatusById($company->id, 'p');
-    $proxyMod::addFailNum($proxy->id);
-    echo $e->getMessage() . PHP_EOL;
 }
 
 echo get_class($resourceMod) . ' execute finish' . PHP_EOL;
-
+$end = time();
+echo 'End Time:' . date('Y-m-d H:i:s', $end) . PHP_EOL;
+echo 'exec:' . ($end-$start)/60 . PHP_EOL;
 

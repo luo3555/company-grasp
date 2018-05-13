@@ -26,7 +26,7 @@ CURRENT_PROCESS=$(ps -ef | grep $BASEPATH'/'$RUN_SCRIPT | wc -l)
 
 if [ $CURRENT_PROCESS -lt $MAX_PROCESS ]; 
 then
-  $PHP_BIN $RUN_COMMAND & > /dev/null
+  $PHP_BIN $RUN_COMMAND >> $BASEPATH'/proxy.log' & 
 else
   echo 'Current Process:'$CURRENT_PROCESS
   echo 'Allow Max Process:'$MAX_PROCESS
