@@ -18,13 +18,13 @@ $customs->setUrl($url);
 // {
     $customs->getBaseInfo($page, $pageSize);
 
-    if (empty($customs->getData('list'))) {
-        break;
-    }
+    // if (empty($customs->getData('list'))) {
+    //     break;
+    // }
 
-    if ($page>$customs->getData('totalPage')) {
-        break;
-    }
+    // if ($page>$customs->getData('totalPage')) {
+    //     break;
+    // }
 
     foreach ($customs->getData('list') as $item) {
         $item['lost_credit'] = 0;
