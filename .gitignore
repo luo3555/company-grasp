@@ -1,4 +1,5 @@
 *.html
+*.log
 /vendor/
 /test.php
 /first.php

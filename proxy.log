@@ -1,8 +1,0 @@
-
-Fatal error: Uncaught Requests_Exception: cURL error 28: Operation timed out after 10000 milliseconds with 0 bytes received in /Users/Daniel.luo/www/html/7.0/local.grasp.com/public_html/vendor/rmccue/requests/library/Requests/Transport/cURL.php:422
-Stack trace:
-#0 /Users/Daniel.luo/www/html/7.0/local.grasp.com/public_html/vendor/rmccue/requests/library/Requests/Transport/cURL.php(177): Requests_Transport_cURL->process_response('', Array)
-#1 /Users/Daniel.luo/www/html/7.0/local.grasp.com/public_html/vendor/rmccue/requests/library/Requests.php(379): Requests_Transport_cURL->request('http://www.xdai...', Array, NULL, Array)
-#2 /Users/Daniel.luo/www/html/7.0/local.grasp.com/public_html/vendor/rmccue/requests/library/Requests.php(231): Requests::request('http://www.xdai...', Array, NULL, 'GET', Array)
-#3 /Users/Daniel.luo/www/html/7.0/local.grasp.com/public_html/lib/Resource/Base.php(16): Requests::get('http://www.xdai...', Array, Array)
-#4 /Users/Daniel.luo/www/html/7.0/local.grasp.com/public_html/lib/Resource/Proxybase.php(4 in /Users/Daniel.luo/www/html/7.0/local.grasp.com/public_html/vendor/rmccue/requests/library/Requests/Transport/cURL.php on line 422
