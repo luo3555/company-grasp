@@ -13,12 +13,7 @@ class Company extends Modelbase
 
     public static function getFlagComapny()
     {
-        $sql = "
-            select cpl.id, nameSaic, cpl.saicSysNo from company_grasp_list as cpl 
-            left join company_detail_info as cdi on cpl.saicSysNo=cdi.saicSysNo
-            where cdi.id is null and cpl.status='p' limit 1
-        ";
-        $sth = self::sqLite()->query($sql);
+        $sth = self::sqLite()->query("select id, nameSaic, saicSysNo from company_grasp_list where status='p' limit 1");
         $sth->execute();
         $row = $sth->fetchObject();
         self::updateStatusById($row->id, self::RUN_SEARCH);
@@ -27,12 +22,7 @@ class Company extends Modelbase
 
     public static function getMultiFlagCompany()
     {
-        $sql = "
-            select cpl.id, nameSaic, cpl.saicSysNo from company_grasp_list as cpl 
-            left join company_detail_info as cdi on cpl.saicSysNo=cdi.saicSysNo
-            where cdi.id is null and cpl.status='p' limit :limit
-        ";
-        $sth = self::sqLite()->prepare($sql);
+        $sth = self::sqLite()->prepare("select id, nameSaic, saicSysNo from company_grasp_list where status='p' limit :limit");
         $sth->execute([':limit' => self::getConfig('company/flag/number')]);
         $rows = $sth->fetchAll(\PDO::FETCH_CLASS);
         foreach ($rows as $row) {
