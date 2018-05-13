@@ -37,9 +37,14 @@ if (!$proxies) {
 // 标记要抓取的公司
 /** @var \Lib\Model\Company $companyMod **/
 $companyMod = Tenf::getModel('company');
+$companyMod->restExpiredFlag();
 
 foreach ($proxies as $proxy) {
     $companies = $companyMod::getMultiFlagCompany();
+    if (empty($companies)) {
+        echo 'No company enable!' . PHP_EOL;
+        exit;
+    }
 
     // step 3
     // 开始抓取数据
@@ -71,7 +76,7 @@ foreach ($proxies as $proxy) {
                 echo 'Get Data Complete!' . PHP_EOL;
             } else {
                 $companyMod::updateStatusById($company->id, 'p');
-                echo 'Can not grasp data...' . PHP_EOL;
+                echo 'Empty' . PHP_EOL;
             }
         } catch (\Exception $e) {
             $companyMod::updateStatusById($company->id, 'p');

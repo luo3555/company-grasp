@@ -56,7 +56,7 @@ class Qichacha extends \Lib\Resource\Graspbase
                         $this->format($item, 'company');
                         $this->format($item, 'registery_price', '注册资本：');
                         $this->format($item, 'company_email', ['邮箱：', '-']);
-                        $this->format($item, 'company_phone', ['电话：', '']);
+                        $this->format($item, 'company_phone', ['电话：', '-']);
                         $this->format($item, 'company_address', '地址：');
                         return $item;
                     })->first();

@@ -31,6 +31,14 @@ class Company extends Modelbase
         return $rows;
     }
 
+    public static function restExpiredFlag()
+    {
+        $timeLine = date('Y-m-d H:i:s', strtotime(sprintf('-%d minutes', self::getConfig('company/flag/live/minutes'))));
+        $sth = self::sqLite()->prepare("update company_grasp_list set status='p' where updated < :updated");
+        $sth->execute([':updated' => $timeLine]);
+        return $sth->rowCount();
+    }
+
     public static function updateStatusById($id, $status)
     {
         $sth = self::sqLite()->prepare('update company_grasp_list set status=:status, updated=:updated where id=:id');
