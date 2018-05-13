@@ -105,37 +105,11 @@ abstract class Graspbase extends Base
         return $array;
     }
 
-    // public function request($url, $headers=[], $options=[])
-    // {
-    //     $headers = array_merge($headers, $this->_headers);
-    //     $options = array_merge($options, $this->_options);
-    //     $response = \Requests::get($url,$headers, $options);
-    //     return $response->body;
-    // }
-
-    // public function getCookies($options)
-    // {
-    //     /** @var Requests_Cookie_Jar $cookies */
-    //     return new \Requests_Cookie_Jar($options);
-    // }
-
-    // public function setContent($content)
-    // {
-    //     return QueryList::html($content);
-    // }
-
-    // public function setOption($key, $value)
-    // {
-    //     $this->_options[$key] = $value;
-    // }
-
-    // public function setHeader($key, $value)
-    // {
-    //     $this->_headers[$key] = $value;
-    // }
-
-    // public function getConfig($path)
-    // {
-    //     return \Lib\Sqlite::getConfig($path);
-    // }
+    public function debug($data)
+    {
+        $enable = (int)self::getConfig('grasp/resource/debug');
+        if ($enable) {
+            print_r($debug);
+        }
+    }
 }

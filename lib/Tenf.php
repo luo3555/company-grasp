@@ -30,4 +30,23 @@ final class Tenf
         }
         throw new \Exception(sprintf("Class [%s] not exist", $className), 0);
     }
+
+    public static function getEnableGraspResources()
+    {
+        $sth = \Lib\Sqlite::sqLite()->query("select path from config_data where value=1 and path like 'grasp/resource/%/enable'");
+        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $list = [];
+        foreach ($rows as $row)
+        {
+            if (preg_match('/grasp\/resource\/([a-z]+)\/enable/', $row['path'], $match)) {
+                $list[] = 'grasp_' . $match[1];
+            }
+        }
+        return $list;
+    }
+
+    public static function Upgrade()
+    {
+        \Lib\Model\Upgrade::update();
+    }
 }

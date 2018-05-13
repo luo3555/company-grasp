@@ -56,32 +56,37 @@ foreach ($proxies as $proxy) {
 
     echo 'Start Time:' . date('Y-m-d H:i:s', $start) . PHP_EOL;
     foreach ($companies as $company) {
-        try {
-            /** @var \Lib\Resource\Base $resourceMod **/
-            $resourceMod = Tenf::getResource('grasp_qichacha');
-            $resourceMod->setHeader('User-Agent', $brow[$agent]);
-            $resourceMod->setOption('timeout', 30);
-            $resourceMod->setOption('proxy', sprintf('%s:%d', $proxy->ip, $proxy->port));
-            //print_r($company);
-            $resourceMod->setGraspObject($company);
+        $resources = Tenf::getEnableGraspResources();
+        foreach ($resources as $uri) {
+            try {
+                /** @var \Lib\Resource\Base $resourceMod **/
+                $resourceMod = Tenf::getResource($uri);
+                $resourceMod->setHeader('User-Agent', $brow[$agent]);
+                $resourceMod->setOption('timeout', 30);
+                $resourceMod->setOption('proxy', sprintf('%s:%d', $proxy->ip, $proxy->port));
+                //print_r($company);
+                $resourceMod->setGraspObject($company);
 
-            echo get_class($resourceMod) . ' loading.....' . PHP_EOL;
-            $resourceMod->execute();
-            if ($resourceMod->getCount()) {
-                // 保存公司信息
-                foreach ($resourceMod->getResponse() as $item) {
-                    $companyMod::addDetailRecord($item);
+                echo get_class($resourceMod) . ' loading.....' . PHP_EOL;
+                $resourceMod->execute();
+                if ($resourceMod->getCount()) {
+                    // 保存公司信息
+                    foreach ($resourceMod->getResponse() as $item) {
+                        $companyMod::addDetailRecord($item);
+                    }
+                    $companyMod::updateStatusById($company->id, 'c');
+                    echo 'Get Data Complete!' . PHP_EOL;
+                    break;
+                } else {
+                    $companyMod::updateStatusById($company->id, 'p');
+                    echo 'Empty' . PHP_EOL;
                 }
-                $companyMod::updateStatusById($company->id, 'c');
-                echo 'Get Data Complete!' . PHP_EOL;
-            } else {
+            } catch (\Exception $e) {
                 $companyMod::updateStatusById($company->id, 'p');
-                echo 'Empty' . PHP_EOL;
+                $proxyMod::addFailNum($proxy->id);
+                echo $e->getMessage() . PHP_EOL;
+                echo $proxy->ip . PHP_EOL;
             }
-        } catch (\Exception $e) {
-            $companyMod::updateStatusById($company->id, 'p');
-            $proxyMod::addFailNum($proxy->id);
-            echo $e->getMessage() . PHP_EOL;
         }
     }
 }

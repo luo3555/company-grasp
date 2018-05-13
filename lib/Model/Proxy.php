@@ -15,7 +15,7 @@ class Proxy extends Modelbase
     {
         $sql = "select id, ip, port from proxy_list where fail_number<=:fail_number order by date desc, time asc limit :limit";
         $sth = self::sqLite()->prepare($sql);
-        $sth->execute([':fail_number' => self::_failMaxNum(), ':limit' => 10]);
+        $sth->execute([':fail_number' => self::_failMaxNum(), ':limit' => self::getConfig('proxy/multi/record/number')]);
         return $sth->fetchAll(\PDO::FETCH_CLASS);
     }
 

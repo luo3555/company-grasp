@@ -23,7 +23,7 @@ class Company extends Modelbase
     public static function getMultiFlagCompany()
     {
         $sth = self::sqLite()->prepare("select id, nameSaic, saicSysNo from company_grasp_list where status='p' limit :limit");
-        $sth->execute([':limit' => 25]);
+        $sth->execute([':limit' => self::getConfig('company/flag/number')]);
         $rows = $sth->fetchAll(\PDO::FETCH_CLASS);
         foreach ($rows as $row) {
             self::updateStatusById($row->id, self::RUN_SEARCH);
