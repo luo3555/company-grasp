@@ -109,7 +109,7 @@ abstract class Graspbase extends Base
     {
         $enable = (int)self::getConfig('grasp/resource/debug');
         if ($enable) {
-            print_r($debug);
+            print_r($data);
         }
     }
 }

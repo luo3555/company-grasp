@@ -26,7 +26,7 @@ CURRENT_PROCESS=$(ps -ef | grep $RUN_COMMAND | wc -l)
 
 if [ $CURRENT_PROCESS -lt $MAX_PROCESS ]; 
 then
-  $PHP_BIN $RUN_COMMAND >> $BASEPATH'/grasp.log' &
+  $PHP_BIN $RUN_COMMAND > /dev/null 2>&1 &
 else
   echo 'Current Process:'$CURRENT_PROCESS
   echo 'Allow Max Process:'$MAX_PROCESS

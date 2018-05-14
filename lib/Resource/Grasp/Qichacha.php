@@ -31,7 +31,7 @@ class Qichacha extends \Lib\Resource\Graspbase
         $html = $this->request($searchUrl,[], [
                     'cookies' => $cookies
                 ]);
-        //print_r($html);
+        $this->debug($html);
 
         $result = [];
         

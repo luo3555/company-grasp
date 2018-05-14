@@ -14,6 +14,7 @@ class tianyancha extends \Lib\Resource\Graspbase
     protected function graspDataByKeyword($companyName)
     {
         $html = $this->request(sprintf('%s/search?key=%s', $this->_config['url'], $companyName));
+        $this->debug($html);
         $rules = [
             'href' => [
                 '.search_result_container .search_result_single .search_right_item>div>a.sv-search-company', 'href'
