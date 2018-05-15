@@ -50,7 +50,7 @@ foreach ($proxies as $proxy) {
     // step 3
     // 开始抓取数据
     $brow = [
-        'Mozilla/5.0 (X11; Ubuntu; Linu…) Gecko/20100101 Firefox/59.0',
+        'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0',
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:59.0) Gecko/20100101 Firefox/59.0'
     ];
     $agent = $agent = rand(0, (count($brow) -1));
@@ -95,7 +95,6 @@ foreach ($proxies as $proxy) {
                     $num = $match[1] == 28 ? 1 : 3;
                 }
                 $proxyMod::addFailNum($proxy->id, $num);
-                echo $num . PHP_EOL;
                 echo $e->getMessage() . PHP_EOL;
                 echo $proxy->ip . PHP_EOL;
                 break;
