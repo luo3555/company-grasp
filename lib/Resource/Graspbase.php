@@ -37,11 +37,16 @@ abstract class Graspbase extends Base
 
     abstract protected function graspDataByKeyword($graspObject);
 
-    public function execute()
+    public function execute($search=true)
     {
         $result = [];
-        $name = explode('公司', $this->getGraspObject()->nameSaic);
-        $relateInfo = $this->graspDataByKeyword($name[0]);
+        if ($search) {
+            $name = explode('公司', $this->getGraspObject()->nameSaic);
+            $relateInfo = $this->graspDataByKeyword($name[0]);
+        } else {
+            $relateInfo = $this->graspDataByKeyword($this->getGraspObject());
+        }
+        
         if (is_array($relateInfo)) {
             foreach ($relateInfo as $company) {
                 // @TODO 如果，有点电话，网站都没有，就跳过这条记录
@@ -103,6 +108,21 @@ abstract class Graspbase extends Base
             }
         }
         return $array;
+    }
+
+    protected function format(&$array, $field, $search=null, $replace='')
+    {
+        if (isset($array[$field])) {
+            $array[$field] = strip_tags($array[$field]);
+            if (!is_null($search)) {
+                if (!is_array($search)) {
+                    $search = (array)$search;
+                }
+                foreach ($search as $need) {
+                    $array[$field] = str_replace($need, $replace, $array[$field]);
+                }
+            }
+        }
     }
 
     public function debug($data)

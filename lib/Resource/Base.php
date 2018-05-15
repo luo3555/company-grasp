@@ -50,4 +50,14 @@ class Base
     {
         return \Lib\Sqlite::getConfig($path);
     }
+
+    public function setConfig($key, $value)
+    {
+        return \Lib\Sqlite::setConfig($key, $value);
+    }
+
+    public function updateConfig($key, $value)
+    {
+        return \Lib\Sqlite::updateConfig($key, $value);
+    }
 }
