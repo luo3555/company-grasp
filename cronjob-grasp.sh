@@ -8,7 +8,7 @@ DATE_TIME=`date '+%H'`
 
 if [ $DATE_TIME -gt $START_TIME ] || [ $DATE_TIME -lt $END_TIME ];
 then
-    MAX_PROCESS=6
+    MAX_PROCESS=26
 else
     MAX_PROCESS=4
 fi

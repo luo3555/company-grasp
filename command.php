@@ -40,6 +40,7 @@ $companyMod = Tenf::getModel('company');
 $companyMod->restExpiredFlag();
 
 foreach ($proxies as $proxy) {
+    $proxyHasError = false;
     $companies = $companyMod::getMultiFlagCompany();
     if (empty($companies)) {
         echo 'No company enable!' . PHP_EOL;
@@ -86,7 +87,12 @@ foreach ($proxies as $proxy) {
                 $proxyMod::addFailNum($proxy->id);
                 echo $e->getMessage() . PHP_EOL;
                 echo $proxy->ip . PHP_EOL;
+                $proxyHasError = true;
+                break;
             }
+        }
+        if ($proxyHasError) {
+            break;
         }
     }
 }
