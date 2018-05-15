@@ -5,7 +5,7 @@ class Ip3366 extends \Lib\Resource\Proxybase
 {
     protected function getUrl()
     {
-        return  'http://www.ip3366.net/free/';
+        return  'http://www.ip3366.net/free/?stype=2';
     }
 
     protected function getProxy()

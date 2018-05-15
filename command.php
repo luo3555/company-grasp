@@ -56,7 +56,7 @@ foreach ($proxies as $proxy) {
     $agent = $agent = rand(0, (count($brow) -1));
 
     echo 'Start Time:' . date('Y-m-d H:i:s', $start) . PHP_EOL;
-    foreach ($companies as $company) {
+    foreach ($companies as $idx => $company) {
         $resources = Tenf::getEnableGraspResources();
         foreach ($resources as $uri) {
             try {
@@ -84,10 +84,20 @@ foreach ($proxies as $proxy) {
                 }
             } catch (\Exception $e) {
                 $companyMod::updateStatusById($company->id, 'p');
-                $proxyMod::addFailNum($proxy->id);
+                foreach ($companies as $_idx => $_company ) {
+                    if ($_idx > $idx) {
+                        $companyMod::updateStatusById($_company->id, 'p');
+                    }
+                }
+                $proxyHasError = true;
+                $num = 1;
+                if (preg_match('/cURL\s{1}error\s{1}(\d+)/', $e->getMessage(), $match)) {
+                    $num = $match[1] == 28 ? 1 : 3;
+                }
+                $proxyMod::addFailNum($proxy->id, $num);
+                echo $num . PHP_EOL;
                 echo $e->getMessage() . PHP_EOL;
                 echo $proxy->ip . PHP_EOL;
-                $proxyHasError = true;
                 break;
             }
         }

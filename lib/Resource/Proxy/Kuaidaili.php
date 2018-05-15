@@ -5,7 +5,7 @@ class Kuaidaili extends \Lib\Resource\Proxybase
 {
     protected function getUrl()
     {
-        return sprintf('https://www.kuaidaili.com/free/inha/1/');
+        return sprintf('https://www.kuaidaili.com/free/intr/1/');
     }
 
     protected function getProxy()

@@ -10,7 +10,7 @@ if [ $DATE_TIME -gt $START_TIME ] || [ $DATE_TIME -lt $END_TIME ];
 then
     MAX_PROCESS=26
 else
-    MAX_PROCESS=4
+    MAX_PROCESS=10
 fi
 
 # Max Proess

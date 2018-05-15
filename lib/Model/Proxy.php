@@ -24,10 +24,10 @@ class Proxy extends Modelbase
         return self::getConfig('proxy/fail/max_num');
     }
 
-    public static function addFailNum($id)
+    public static function addFailNum($id, $num=1)
     {
-        $sth = self::sqLite()->prepare('update proxy_list set fail_number=fail_number+1 where id=:id');
-        $sth->execute([':id' => $id]);
+        $sth = self::sqLite()->prepare('update proxy_list set fail_number=fail_number+:num where id=:id');
+        $sth->execute([':id' => $id, ':num' => (int)$num]);
         return $sth->rowCount();
     }
 
