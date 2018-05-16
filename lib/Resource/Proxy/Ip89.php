@@ -11,11 +11,12 @@ class Ip89 extends \Lib\Resource\Proxybase
     protected function getProxy()
     {
         $content = $this->request($this->getUrl());
-        $content = explode('高', $content);
-        $content = explode('<br>', $content[0]);
-        array_shift($content);
-        array_pop($content);
-        $ips = explode(PHP_EOL, $content);
+        $content = explode('<br/>', $content);
+        $content = explode('<br>', $content[1]);
+        $ips = explode('<BR>', $content[0]);
+        // array_shift($content);
+        // array_pop($content);
+        // $ips = explode(PHP_EOL, $content);
         $ips = array_map(function($item) {
             return trim($item);
         }, $ips);
