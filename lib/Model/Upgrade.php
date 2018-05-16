@@ -22,7 +22,7 @@ class Upgrade extends Modelbase
 
         $versionList = [];
         while($file = readdir($dir)) {
-            if ($file!='.' && $file!='..' && substr($file, 0, stripos('-', $file)) == 'update') {
+            if ($file!='.' && $file!='..' && substr($file, 0, stripos($file, '-')) == 'update') {
                 $file = str_replace('update-', '', $file);
                 $tmp = str_replace('.php', '', $file);
                 $versionList[] = $tmp;
