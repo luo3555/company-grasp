@@ -94,19 +94,4 @@ class Qichacha extends \Lib\Resource\Graspbase
         }
         return $result;
     }
-
-    protected function format(&$array, $field, $search=null, $replace='')
-    {
-        if (isset($array[$field])) {
-            $array[$field] = strip_tags($array[$field]);
-            if (!is_null($search)) {
-                if (!is_array($search)) {
-                    $search = (array)$search;
-                }
-                foreach ($search as $need) {
-                    $array[$field] = str_replace($need, $replace, $array[$field]);
-                }
-            }
-        }
-    }
 }
