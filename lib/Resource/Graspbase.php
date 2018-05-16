@@ -44,9 +44,8 @@ abstract class Graspbase extends Base
             $name = explode('公司', $this->getGraspObject()->nameSaic);
             $relateInfo = $this->graspDataByKeyword($name[0]);
         } else {
-            $relateInfo = $this->graspDataByKeyword($this->getGraspObject());
+            $relateInfo = $this->graspDataByKeyword($this->getGraspObject()->nameSaic);
         }
-        
         if (is_array($relateInfo)) {
             foreach ($relateInfo as $company) {
                 // @TODO 如果，有点电话，网站都没有，就跳过这条记录
