@@ -13,6 +13,10 @@ class Base
     {
         $headers = array_merge($headers, $this->_headers);
         $options = array_merge($options, $this->_options);
+
+        if(!isset($headers['User-Agent'])) {
+            $headers['User-Agent'] = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0';
+        }
         $response = \Requests::get($url,$headers, $options);
         return $response->body;
     }
