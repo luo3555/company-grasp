@@ -38,7 +38,6 @@ class Mohusou extends \Lib\Resource\Graspbase
 
         $result = [];
         foreach ($href as $url) {
-            $url = 'http://local.grasp.com/text-g.html';
             $html = $this->request($url);
             $rules = [
                 'company' => ['.bd-e5 .mid .name span', 'html' , '-a'],
@@ -53,12 +52,13 @@ class Mohusou extends \Lib\Resource\Graspbase
                 'info' => ['.firm_info .info_list li:eq(5) span', 'html'],
                 'state' => $province
             ];
-            $result[] = $this->setContent($html)->rules($rules)->query()->getData(function($item) {
+            $result[] = $this->setContent($html)->rules($rules)->query()->getData(function($item) use ($province) {
                  $this->format($item, 'web', 'http://');
+                 $item['state'] = $province;
                  return $item;
-            })->all();
+            })->first();
         }
-        $this->updateConfig(sprintf(self::PROVINCE_TPL, $province), $page +1);
+        $this->updateConfig(sprintf(self::PATE_TPL, $province), ($page +1));
         return $result;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+/**
 $sql =<<<eod
 PRAGMA foreign_keys=off;
 
@@ -51,8 +52,9 @@ COMMIT;
 
 PRAGMA foreign_keys=on;
 eod;
-\Lib\Sqlite::sqLite()->query($sql);
-
+$sth = \Lib\Sqlite::sqLite()->query($sql);
+$sth->execute();
+*/
 
 $province = [
     'beijing' => 110000,
@@ -71,7 +73,7 @@ $province = [
     'jiangxi' => 360000,
     'shandong' => 370000,
     'henan' => 410000,
-    'hubei' => 420000
+    'hubei' => 420000,
     'hunan' => 430000,
     'guangdong' => 440000,
     'guangxi' => 450000,
@@ -94,13 +96,13 @@ $province = [
 
 $init = [
     // 信息
-    'page' => 'collect/resource/mohusou/%s/page' => 1,
-    'name' => 'collect/resource/mohusou/%s/id' => '',
+    'page' => 'collect/resource/mohusou/%s/page',
+    'name' => 'collect/resource/mohusou/%s/id',
 ];
 
-// foreach ($province as $name => $id) {
-//     foreach ($init as $idx => $tpl) {
-//         $value = $idx == 'page' ? 1 : $id ;
-//         \Lib\Tenf::getModel('config')::addConfig(sprintf($tpl, $name), $value);
-//     }
-// }
+foreach ($province as $name => $id) {
+    foreach ($init as $idx => $tpl) {
+        $value = $idx == 'page' ? 1 : $id ;
+        \Lib\Tenf::getModel('config')::addConfig(sprintf($tpl, $name), $value);
+    }
+}

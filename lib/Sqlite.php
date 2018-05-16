@@ -90,7 +90,7 @@ class Sqlite extends Objectdata
         foreach ($insertField as $field => $value)
         {
             $_fields[$field] = ':' . $field;
-            $values[] = $value;
+            $values[$_fields[$field]] = $value;
         }
         $sql = "INSERT INTO %s(%s) VALUES(%s)";
         $sql = sprintf($sql, $table, implode(',', array_keys($_fields)), implode(',', $_fields));
